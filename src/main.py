@@ -29,7 +29,12 @@ def main():
 
 
     else: # Otomatis
-        jumlah_token_unik = int(input('Jumlah Token Unik : '))
+        jumlah_token_unik = input('Jumlah Token Unik : ')
+        while not jumlah_token_unik.isdigit():
+            print("Input tidak valid!")
+            jumlah_token_unik = input('Jumlah Token Unik: ')
+        jumlah_token_unik = int(jumlah_token_unik)
+
         token_unik = input('Token : ').split()
         # Cek Token Validity
         token_valid = True
@@ -48,14 +53,34 @@ def main():
                     break
             token_set = set(token_unik)
 
-        ukuran_buffer = int(input('Ukuran Buffer : '))
-        matrix_width = int(input('Matrix Width : '))
-        matrix_height = int(input('Matrix Height : '))
-        jumlah_sekuens = int(input('Jumlah Sekuens : '))
-        ukuran_maksimal_sekuens = int(input('Ukuran Maksimal Sekuens : '))
+        ukuran_buffer = input('Ukuran Buffer : ')
+        while not ukuran_buffer.isdigit():
+            print("Input tidak valid!")
+            ukuran_buffer = input('Ukuran Buffer : ')
+        ukuran_buffer = int(ukuran_buffer)
+
+        matrix_size = input('Matrix Size : ').split()
+        while len(matrix_size) != 2 or not (matrix_size[0].isdigit() and matrix_size[1].isdigit()):
+            print('Input tidak valid!')
+            matrix_size = input('Matrix Size : ').split()
+        matrix_width = int(matrix_size[0])
+        matrix_height = int(matrix_size[1])
+
+        jumlah_sekuens = input('Jumlah Sekuens : ')
+        while not jumlah_sekuens.isdigit():
+            print("Input tidak valid!")
+            jumlah_sekuens = input('Jumlah Sekuens : ')
+        jumlah_sekuens = int(jumlah_sekuens)
+
+        ukuran_maksimal_sekuens = input('Ukuran Maksimal Sekuens : ')
+        while not ukuran_maksimal_sekuens.isdigit():
+            print("Input tidak valid!")
+            ukuran_maksimal_sekuens = input('Ukuran Maksimal Sekuens : ')
+        ukuran_maksimal_sekuens = int(ukuran_maksimal_sekuens)
+
         print()
 
-        # Create Matrix
+        # Create Random Matrix
         matrix = []
         for i in range(matrix_height):
             line = []
@@ -63,18 +88,25 @@ def main():
                 line.append(token_unik[randint(0, jumlah_token_unik-1)])
             matrix.append(line)
 
-        # Create Sequence
-        print(jumlah_sekuens, "Sequence : ")
+        # Create Random Sequence
         sequences = []
         for i in range(jumlah_sekuens):
-            sekuens = []
-            for j in range(randint(0, ukuran_maksimal_sekuens)):
-                sekuens.append(token_unik[randint(0, jumlah_token_unik-1)])
+            valid = False
+            while not valid:
+                sekuens = []
+                for j in range(randint(1, ukuran_maksimal_sekuens)):
+                    sekuens.append(token_unik[randint(0, jumlah_token_unik-1)])
+                valid = True # Cek apakah sequence yang digenerate unik
+                for sequence in sequences:
+                    if (sequence[0] == sekuens):
+                        valid = False
+                        break
             sequences.append((sekuens, randint(-50, 50)))
+
     print()   
     
     # Print Matrix
-    print("Matrix : ")
+    print("MATRIX")
     for baris in matrix:
         for token in baris:
             print(token, end=' ')
@@ -82,6 +114,7 @@ def main():
     print()
     
     # Print Sequence
+    print("SEQUENCES")
     for sequence in sequences:
         print("Sequence : ", end='')
         for token in sequence[0]:
@@ -130,13 +163,11 @@ def main():
         print()
     
     if pilihan == 'y':
-        print('y')
-        f = open("../test/output.txt", "w")
+        nama_output = input("Nama file output : ")
+        f = open("../test/" + nama_output, "w")
         f.write(output)
         f.close()
-
-    else: # pilihan == 'n'
-        print('n')
+        print('Output berhasil disimpan di "../test/{}".'.format(nama_output))
 
 if __name__ == "__main__":
     main()
